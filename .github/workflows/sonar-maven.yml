@@ -6,13 +6,20 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (full history)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # nécessaire pour la décoration PR et l'analyse SCM
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -34,12 +41,10 @@ jobs:
       - name: Run SonarCloud scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # fourni par GitHub
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # fourni automatiquement par GitHub
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # à créer dans GitHub Secrets
         with:
           args: >
-            -Dsonar.projectKey=YOUR_PROJECT_KEY
-            -Dsonar.organization=YOUR_ORG
+            -Dsonar.projectKey=ibt2_Application_web_de_gestion_des_alertes_noyades
+            -Dsonar.organization=ibt2
             -Dsonar.host.url=https://sonarcloud.io
-
-
