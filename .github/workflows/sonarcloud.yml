@@ -1,0 +1,30 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  analyze:
+    name: Analyze with SonarCloud
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatique !
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Celui que vous créez
+      with:
+        # ⚠️ REMPLACER par vos vraies clés de SonarCloud !
+        args: >
+          -Dsonar.organization=ibt2
+          -Dsonar.projectKey=ibt2_Application_web_de_gestion_des_alertes_noyades
+
