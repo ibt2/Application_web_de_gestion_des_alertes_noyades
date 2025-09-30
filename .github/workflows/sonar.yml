@@ -1,0 +1,37 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn clean compile
+
+    - name: Run tests
+      run: mvn test
+
+    - name: SonarCloud Scan
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=ibt2_Application_web_de_gestion_des_alertes_noyade \
+          -Dsonar.organization=ibt2 \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
