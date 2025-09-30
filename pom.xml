@@ -1,5 +1,0 @@
-<properties>
-    <sonar.organization>ibt2</sonar.organization>
-    <sonar.projectKey>ibt2_Application_web_de_gestion_des_alertes_noyade</sonar.projectKey>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-</properties>
