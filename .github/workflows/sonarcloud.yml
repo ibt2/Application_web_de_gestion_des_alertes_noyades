@@ -17,14 +17,30 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'  # Standard pour J2EE
+        distribution: 'temurin'
+
+    - name: Compile Java sources
+      run: |
+        mkdir -p bin
+        find src -name "*.java" > sources.txt
+        javac -d bin -cp "WebContent/WEB-INF/lib/*" @sources.txt
+
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatique !
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Celui que vous créez
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
-        # ⚠️ REMPLACER par vos vraies clés de SonarCloud !
         args: >
           -Dsonar.organization=ibt2
           -Dsonar.projectKey=ibt2_Application_web_de_gestion_des_alertes_noyades
-
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.sources=src
+          -Dsonar.java.binaries=bin
+          -Dsonar.java.libraries=WebContent/WEB-INF/lib/*.jar
+          -Dsonar.sourceEncoding=UTF-8
+          -Dsonar.java.source=8
